@@ -4,7 +4,7 @@
 #define ONE_WIRE_BUS 2
 
 
-const float stepsPerRevolution = 1200; //Number of steps for a half rotation with the stepper motor.
+const float stepsPerRevolution = 1024; //Number of steps for a half rotation with the stepper motor. Maybe it should be 32*64 / 2 = 1024
 float curSteps = 0; //Current Position value.
 float steps2take = 0; //# of steps to go from current position to new desired position. 0 is midpoint, -stepsPerRevolution/2 = Leftmost position, +stepsPerRevolution/2 = Rightmost.
 const float Low = 20.0; //Our "minimum" temperature, any lower temperatures will be evaluated as 20.
@@ -27,8 +27,9 @@ void setup(void)
 void loop() {
   delay(1000);
   sensors.requestTemperatures(); 
-  Celcius=sensors.getTempCByIndex(0); //Variable to hold temperature value.
-
+  Celcius = sensors.getTempCByIndex(0); //Variable to hold temperature value.
+  Celcius = Celcius * 1.1263 - 2.3072; //Measured data is manipulated to reflect reality better, per our calibration. R^2 value for linear fit is 0,9878 with 5 data points
+  
   float steps2take = (stepsPerRevolution) * (Mid-Celcius)/Range -curSteps; 
 
 
